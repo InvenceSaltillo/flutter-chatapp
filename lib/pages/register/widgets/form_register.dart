@@ -1,5 +1,6 @@
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/socket_service.dart';
 import 'package:chat/widgets/boton_azul.dart';
 import 'package:chat/widgets/custom_input.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _FormRegisterState extends State<FormRegister> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     nameCtrl.text = 'Riojas';
     emailCtrl.text = 'riojas@test.com';
@@ -59,6 +61,7 @@ class _FormRegisterState extends State<FormRegister> {
                     );
 
                     if (registerOk == true) {
+                      socketService.connect();
                       Navigator.pushReplacementNamed(context, 'usuarios');
                     } else {
                       // Mostrar alerta

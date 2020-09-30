@@ -178,11 +178,13 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     final newMessage = new ChatMessage(
       uid: authService.usuario.uid,
       texto: texto,
+      createdAt: new DateTime.now(),
       animationController: AnimationController(
           vsync: this, duration: Duration(milliseconds: 400)),
     );
 
     _messages.insert(0, newMessage);
+    print(new DateTime.now());
 
     newMessage.animationController.forward();
 
@@ -193,6 +195,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     this.socketService.emit('mensaje-personal', {
       'de': this.authService.usuario.uid,
       'para': this.chatService.usuarioPara.uid,
+      'createdAt': new DateTime.now().toString(),
       'mensaje': texto
     });
   }

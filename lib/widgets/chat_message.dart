@@ -5,12 +5,14 @@ import 'package:provider/provider.dart';
 class ChatMessage extends StatelessWidget {
   final String texto;
   final String uid;
+  final dynamic createdAt;
   final AnimationController animationController;
 
   const ChatMessage({
     Key key,
     @required this.texto,
     @required this.uid,
+    @required this.createdAt,
     @required this.animationController,
   }) : super(key: key);
 

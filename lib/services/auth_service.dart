@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chat/global/environment.dart';
+import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/models/login_response.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:flutter/material.dart';
@@ -89,23 +90,30 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<bool> isLoggedIn() async {
+  Future<Map<String, dynamic>> isLoggedIn() async {
     final token = await this._storage.read(key: 'token');
 
-    final resp = await http.get(
-      '${Environment.apiUrl}login/renew',
-      headers: {'x-token': token},
-    );
+    try {
+      final resp = await http.get(
+        '${Environment.apiUrl}login/renew',
+        headers: {'x-token': token},
+      );
 
-    if (resp.statusCode == 200) {
-      final loginResponse = loginResponseFromJson(resp.body);
-      this.usuario = loginResponse.usuario;
+      if (resp.statusCode == 200) {
+        final loginResponse = loginResponseFromJson(resp.body);
+        this.usuario = loginResponse.usuario;
 
-      await this._guardarToken(loginResponse.token);
-      return true;
-    } else {
+        await this._guardarToken(loginResponse.token);
+        return {'ok': true};
+      } else {
+        this.logOut();
+        return {'ok': false};
+      }
+    } catch (e) {
+      print('Error: $e');
+
       this.logOut();
-      return false;
+      return {'ok': false, 'msg': e};
     }
   }
 

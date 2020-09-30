@@ -26,14 +26,40 @@ class LoadingPage extends StatelessWidget {
 
     final autenticado = await authService.isLoggedIn();
 
-    if (autenticado) {
+    if (autenticado['ok']) {
       socketService.connect();
-      // Navigator.pushReplacementNamed(context, 'usuarios');
+
       Navigator.pushReplacement(context,
           PageRouteBuilder(pageBuilder: (_, __, ___) => UsuariosPage()));
     } else {
-      Navigator.pushReplacement(
-          context, PageRouteBuilder(pageBuilder: (_, __, ___) => LoginPage()));
+      if (autenticado['msg'] != null) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => AlertDialog(
+            title: Text('Error'),
+            content: Text('${autenticado['msg']}'),
+            actions: <Widget>[
+              MaterialButton(
+                child: Text('Ok'),
+                elevation: 5,
+                textColor: Colors.blue,
+                onPressed: () {
+                  Navigator.pop(context);
+
+                  Navigator.pushReplacement(
+                      context,
+                      PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => LoginPage()));
+                },
+              ),
+            ],
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(context,
+            PageRouteBuilder(pageBuilder: (_, __, ___) => LoginPage()));
+      }
     }
   }
 }

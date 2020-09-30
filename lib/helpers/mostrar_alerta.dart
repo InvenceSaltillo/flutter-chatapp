@@ -15,7 +15,9 @@ mostrarAlerta(BuildContext context, String titulo, String subtitulo) {
             child: Text('Ok'),
             elevation: 5,
             textColor: Colors.blue,
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         ],
       ),
